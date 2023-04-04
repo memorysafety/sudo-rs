@@ -6,6 +6,8 @@ license.workspace = true
 repository.workspace = true
 homepage.workspace = true
 publish.workspace = true
+readme.workspace = true
+description.workspace = true
 categories = ["command-line-interface"]
 
 [dependencies]
@@ -14,3 +16,29 @@ sudo-system.workspace = true
 sudo-cli.workspace = true
 sudoers.workspace = true
 sudo-pam.workspace = true
+
+[package.metadata.deb]
+name = "sudo-rs"
+copyright = "Copyright (c) 2022-2023 Internet Security Research Group"
+maintainer = "Prossimo (ISRG) <sudo-rs-maintainer@memorysafety.org>"
+maintainer-scripts = "../pkg/deb/"
+# Until we think it is safe to actually replace the real sudo package, don't
+# mark it as breaking or replacing the real sudo package and don't attempt to
+# overwrite /usr/bin/sudo, instead explicitly via assets install it under new
+# name /usr/bin/sudo-rs
+#breaks = "sudo"
+#replaces = "sudo"
+assets = [
+  ["target/release/sudo", "/usr/bin/sudo-rs", "755"]
+]
+
+[package.metadata.generate-rpm]
+# See: https://fedoraproject.org/wiki/Licensing:Main?rd=Licensing#Good_Licenses
+license = "ASL 2.0"
+# Until we think it is safe to actually replace the real sudo package, don't
+# mark it as obsoleting the real sudo package and don't attempt to overwrite
+# /usr/bin/sudo, instead install it under new name /usr/bin/sudo-rs.
+#obsoletes = "sudo"
+assets = [
+  { source = "target/release/sudo", dest = "/usr/bin/sudo-rs", mode = "755" }
+]

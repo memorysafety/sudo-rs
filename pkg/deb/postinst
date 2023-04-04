@@ -1,0 +1,2 @@
+#!/bin/bash -e
+chmod +s /usr/bin/sudo-rs

@@ -1,0 +1,4 @@
+post_install_script = '''
+#!/bin/bash -e
+chmod +s /usr/bin/sudo-rs
+'''

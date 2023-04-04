@@ -1,0 +1,23 @@
+on:
+  push:
+  workflow_dispatch:
+  
+jobs:
+  package:
+    uses: NLnetLabs/ploutos/.github/workflows/pkg-rust.yml@v7
+    with:
+      workspace_package: sudo
+  
+      package_build_rules: |
+        pkg: sudo-rs
+        image:
+          - "rockylinux:8"
+          - "ubuntu:jammy"
+        target: x86_64
+ 
+      package_test_scripts_path: pkg/test-scripts/test-sudo-rs.sh
+
+      deb_extra_build_packages: libclang-dev libpam-dev
+
+      rpm_extra_build_packages: pam-devel clang
+      rpm_scriptlets_path: pkg/rpm/scriptlets.toml

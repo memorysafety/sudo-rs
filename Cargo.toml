@@ -19,6 +19,8 @@ license = "Apache-2.0 OR MIT"
 edition = "2021"
 repository = "https://github.com/memorysafety/sudo-rs"
 homepage = "https://github.com/memorysafety/sudo-rs"
+description = "A memory safe implementation of sudo and su"
+readme = "README.md"
 publish = true
 
 [workspace.dependencies]
