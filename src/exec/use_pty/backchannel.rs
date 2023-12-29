@@ -73,7 +73,7 @@ impl ParentMessage {
             Self::CMD_STAT_EXIT => Self::CommandStatus(CommandStatus::Exit(data)),
             Self::CMD_STAT_TERM => Self::CommandStatus(CommandStatus::Term(data)),
             Self::CMD_STAT_STOP => Self::CommandStatus(CommandStatus::Stop(data)),
-            Self::CMD_PID => Self::CommandPid(data),
+            Self::CMD_PID => Self::CommandPid(ProcessId(data)),
             Self::SHORT_READ => Self::ShortRead,
             _ => unreachable!(),
         }
@@ -90,7 +90,8 @@ impl ParentMessage {
         };
 
         let data = match self {
-            ParentMessage::IoError(data) | ParentMessage::CommandPid(data) => *data,
+            ParentMessage::IoError(data) => *data,
+            ParentMessage::CommandPid(data) => data.0,
             ParentMessage::CommandStatus(status) => match status {
                 CommandStatus::Exit(data)
                 | CommandStatus::Term(data)

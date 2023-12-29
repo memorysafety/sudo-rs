@@ -150,11 +150,11 @@ pub(crate) trait Terminal: sealed::Sealed {
 impl<F: AsRawFd> Terminal for F {
     /// Get the foreground process group ID associated with this terminal.
     fn tcgetpgrp(&self) -> io::Result<ProcessId> {
-        cerr(unsafe { libc::tcgetpgrp(self.as_raw_fd()) })
+        cerr(unsafe { ProcessId(libc::tcgetpgrp(self.as_raw_fd())) })
     }
     /// Set the foreground process group ID associated with this terminalto `pgrp`.
     fn tcsetpgrp(&self, pgrp: ProcessId) -> io::Result<()> {
-        cerr(unsafe { libc::tcsetpgrp(self.as_raw_fd(), pgrp) }).map(|_| ())
+        cerr(unsafe { libc::tcsetpgrp(self.as_raw_fd(), pgrp.id()) }).map(|_| ())
     }
 
     /// Make the given terminal the controlling terminal of the calling process.
@@ -213,6 +213,7 @@ mod tests {
         process::exit,
     };
 
+    use crate::system::interface::ProcessId;
     use crate::system::{fork, getpgid, setsid, term::*, ForkResult};
 
     #[test]
@@ -235,13 +236,13 @@ mod tests {
             // Open a new pseudoterminal.
             let leader = Pty::open().unwrap().leader;
             // The pty leader should not have a foreground process group yet.
-            assert_eq!(leader.tcgetpgrp().unwrap(), 0);
+            assert_eq!(leader.tcgetpgrp().unwrap(), ProcessId(0));
             // Create a new session so we can change the controlling terminal.
             setsid().unwrap();
             // Set the pty leader as the controlling terminal.
             leader.make_controlling_terminal().unwrap();
             // Set us as the foreground process group of the pty leader.
-            let pgid = getpgid(0).unwrap();
+            let pgid = getpgid(ProcessId(0)).unwrap();
             leader.tcsetpgrp(pgid).unwrap();
             // Check that we are in fact the foreground process group of the pty leader.
             assert_eq!(pgid, leader.tcgetpgrp().unwrap());

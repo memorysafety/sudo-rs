@@ -20,16 +20,16 @@ impl UnixUser for Named {
         self.0 == name
     }
 
-    fn has_uid(&self, uid: u32) -> bool {
-        dummy_cksum(self.0) == uid
+    fn has_uid(&self, uid: UserId) -> bool {
+        dummy_cksum(self.0) == uid.id()
     }
 
     fn in_group_by_name(&self, name: &CStr) -> bool {
         self.has_name(name.to_str().unwrap())
     }
 
-    fn in_group_by_gid(&self, gid: u32) -> bool {
-        dummy_cksum(self.0) == gid
+    fn in_group_by_gid(&self, gid: GroupId) -> bool {
+        dummy_cksum(self.0) == gid.id()
     }
 
     fn is_root(&self) -> bool {
@@ -39,7 +39,7 @@ impl UnixUser for Named {
 
 impl UnixGroup for Named {
     fn as_gid(&self) -> crate::system::interface::GroupId {
-        dummy_cksum(self.0)
+        GroupId(dummy_cksum(self.0))
     }
     fn try_as_name(&self) -> Option<&str> {
         Some(self.0)
@@ -175,7 +175,7 @@ fn permission_test() {
     pass!(["user ALL=(ALL:ALL) /bin/foo"], "user" => request! { user, user }, "server"; "/bin/foo" => [authenticate: Authenticate::Nopasswd]);
     pass!(["user ALL=(ALL:ALL) /bin/foo"], "user" => request! { user, root }, "server"; "/bin/foo" => [authenticate: Authenticate::None]);
 
-    assert_eq!(Named("user").as_gid(), 1466);
+    assert_eq!(Named("user").as_gid(), GroupId(1466));
     pass!(["#1466 server=(ALL:ALL) ALL"], "user" => root(), "server"; "/bin/hello");
     pass!(["%#1466 server=(ALL:ALL) ALL"], "user" => root(), "server"; "/bin/hello");
     FAIL!(["#1466 server=(ALL:ALL) ALL"], "root" => root(), "server"; "/bin/hello");

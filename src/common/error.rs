@@ -25,7 +25,7 @@ pub enum Error {
     Configuration(String),
     Options(String),
     Pam(PamError),
-    IoError(Option<PathBuf>, std::io::Error),
+    IoErr(Option<PathBuf>, std::io::Error),
     MaxAuthAttempts(usize),
     PathValidation(PathBuf),
     StringValidation(String),
@@ -64,7 +64,7 @@ impl fmt::Display for Error {
             Error::Configuration(e) => write!(f, "invalid configuration: {e}"),
             Error::Options(e) => write!(f, "{e}"),
             Error::Pam(e) => write!(f, "PAM error: {e}"),
-            Error::IoError(location, e) => {
+            Error::IoErr(location, e) => {
                 if let Some(path) = location {
                     write!(f, "cannot execute '{}': {e}", path.display())
                 } else {
@@ -98,7 +98,7 @@ impl From<PamError> for Error {
 
 impl From<std::io::Error> for Error {
     fn from(err: std::io::Error) -> Self {
-        Error::IoError(None, err)
+        Error::IoErr(None, err)
     }
 }
 

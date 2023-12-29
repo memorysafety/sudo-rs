@@ -63,7 +63,7 @@ impl CommandAndArguments {
                 arguments = vec!["-c".to_string(), escaped(arguments)]
             }
         } else {
-            command = arguments.get(0).map(|s| s.into()).unwrap_or_default();
+            command = arguments.first().map(|s| s.into()).unwrap_or_default();
             arguments.remove(0);
 
             // remember the original binary name before resolving symlinks; this is not

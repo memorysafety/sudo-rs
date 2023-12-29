@@ -27,14 +27,14 @@ impl Wait for ProcessId {
     fn wait(self, options: WaitOptions) -> Result<(ProcessId, WaitStatus), WaitError> {
         let mut status: c_int = 0;
 
-        let pid = cerr(unsafe { libc::waitpid(self, &mut status, options.flags) })
+        let pid = cerr(unsafe { libc::waitpid(self.id(), &mut status, options.flags) })
             .map_err(WaitError::Io)?;
 
         if pid == 0 && options.flags & WNOHANG != 0 {
             return Err(WaitError::NotReady);
         }
 
-        Ok((pid, WaitStatus { status }))
+        Ok((ProcessId(pid), WaitStatus { status }))
     }
 }
 
@@ -168,7 +168,7 @@ mod tests {
             .spawn()
             .unwrap();
 
-        let command_pid = command.id() as ProcessId;
+        let command_pid = ProcessId(command.id() as i32);
 
         let (pid, status) = command_pid.wait(WaitOptions::new()).unwrap();
         assert_eq!(command_pid, pid);
@@ -195,7 +195,7 @@ mod tests {
             .spawn()
             .unwrap();
 
-        let command_pid = command.id() as ProcessId;
+        let command_pid = ProcessId(command.id() as i32);
 
         kill(command_pid, SIGSTOP).unwrap();
 
@@ -224,7 +224,7 @@ mod tests {
             .spawn()
             .unwrap();
 
-        let command_pid = command.id() as ProcessId;
+        let command_pid = ProcessId(command.id() as i32);
 
         let mut count = 0;
         let (pid, status) = loop {

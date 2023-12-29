@@ -16,7 +16,7 @@ use std::{io, mem};
 use crate::common::resolve::resolve_path;
 use crate::log::auth_warn;
 use crate::system::can_execute;
-use crate::system::interface::{UnixGroup, UnixUser};
+use crate::system::interface::{GroupId, UnixGroup, UnixUser, UserId};
 use ast::*;
 use tokens::*;
 
@@ -432,7 +432,7 @@ fn match_user(user: &impl UnixUser) -> impl Fn(&UserSpecifier) -> bool + '_ {
     move |spec| match spec {
         UserSpecifier::User(id) => match_identifier(user, id),
         UserSpecifier::Group(Identifier::Name(name)) => user.in_group_by_name(name.as_cstr()),
-        UserSpecifier::Group(Identifier::ID(num)) => user.in_group_by_gid(*num),
+        UserSpecifier::Group(Identifier::ID(num)) => user.in_group_by_gid(GroupId(*num)),
         _ => todo!(), // nonunix-groups, netgroups, etc.
     }
 }
@@ -443,7 +443,7 @@ fn in_group(user: &impl UnixUser, group: &impl UnixGroup) -> bool {
 
 fn match_group(group: &impl UnixGroup) -> impl Fn(&Identifier) -> bool + '_ {
     move |id| match id {
-        Identifier::ID(num) => group.as_gid() == *num,
+        Identifier::ID(num) => group.as_gid() == GroupId(*num),
         Identifier::Name(name) => group.try_as_name().map_or(false, |s| name == s),
     }
 }
@@ -510,7 +510,7 @@ where
 fn match_identifier(user: &impl UnixUser, ident: &ast::Identifier) -> bool {
     match ident {
         Identifier::Name(name) => user.has_name(name),
-        Identifier::ID(num) => user.has_uid(*num),
+        Identifier::ID(num) => user.has_uid(UserId(*num)),
     }
 }
 

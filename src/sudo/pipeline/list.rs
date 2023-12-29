@@ -5,6 +5,7 @@ use crate::{
     pam::CLIConverser,
     sudo::{cli::SudoListOptions, pam::PamAuthenticator, SudoersPolicy},
     sudoers::{Authorization, ListRequest, Policy, Request, Sudoers},
+    system::interface::ROOT,
     system::User,
 };
 
@@ -87,7 +88,7 @@ impl Pipeline<SudoersPolicy, PamAuthenticator<CLIConverser>> {
             }
 
             Authorization::Forbidden => {
-                if context.current_user.uid == 0 {
+                if context.current_user.uid == ROOT {
                     if original_command.is_some() {
                         return Err(Error::Silent);
                     }

@@ -2,6 +2,7 @@
 
 use crate::common::{resolve::resolve_current_user, Context, Error};
 use crate::log::dev_info;
+use crate::system::interface::ROOT;
 use crate::system::timestamp::RecordScope;
 use crate::system::User;
 use crate::system::{time::Duration, timestamp::SessionRecordFile, Process};
@@ -134,8 +135,6 @@ fn sudo_process() -> Result<(), Error> {
 }
 
 fn self_check() -> Result<(), Error> {
-    const ROOT: u32 = 0;
-
     let euid = User::effective_uid();
     if euid == ROOT {
         Ok(())

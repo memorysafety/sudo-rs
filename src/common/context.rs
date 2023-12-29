@@ -95,6 +95,7 @@ impl Context {
 
 #[cfg(test)]
 mod tests {
+    use crate::system::interface::UserId;
     use crate::{sudo::SudoAction, system::hostname};
     use std::collections::HashMap;
 
@@ -116,6 +117,6 @@ mod tests {
         assert_eq!(context.command.command.to_str().unwrap(), "/usr/bin/echo");
         assert_eq!(context.command.arguments, ["hello"]);
         assert_eq!(context.hostname, hostname());
-        assert_eq!(context.target_user.uid, 0);
+        assert_eq!(context.target_user.uid, UserId(0));
     }
 }

@@ -21,7 +21,7 @@ impl SignalInfo {
     /// Gets the PID that sent the signal.
     pub(crate) fn pid(&self) -> ProcessId {
         // FIXME: some signals don't set si_pid.
-        unsafe { self.info.si_pid() }
+        unsafe { ProcessId(self.info.si_pid()) }
     }
 
     /// Gets the signal number.
