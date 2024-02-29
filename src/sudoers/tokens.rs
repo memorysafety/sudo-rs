@@ -175,6 +175,9 @@ impl Token for Command {
                 // if the magic "" appears, no (further) arguments are allowed
                 args.pop();
             }
+            if args.iter().any(|arg| arg.chars().any(|c| "?*".contains(c))) {
+                return Err("wildcards are not allowed in command arguments".to_string());
+            }
             Some(args.into_boxed_slice())
         };
 
