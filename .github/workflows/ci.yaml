@@ -221,7 +221,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: llvm-cov
-          args: --workspace --all-features --all-targets --release --lcov --output-path lcov.info
+          args: --workspace --all-features --all-targets --release --lcov --output-path lcov.info -- --include-ignored
 
       - name: Upload code coverage
         uses: codecov/codecov-action@v3
@@ -341,7 +341,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: miri
-          args: test --workspace --all-features miri
+          args: test --workspace --all-features miri -- --include-ignored
 
   format:
     runs-on: ubuntu-latest
