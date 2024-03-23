@@ -20,6 +20,12 @@ or newer is necessary to run sudo-rs.
 
 The recommended way to start using `sudo-rs` is via the package manager of your Linux distribution.
 
+### Arch Linux
+
+```sh
+yay -Syu sudo-rs
+```
+
 ### Debian/Ubuntu
 If you are running Debian 13 (trixie) or later, or Ubuntu 24.04 (Noble Numbat) or later, you can use:
 ```sh
