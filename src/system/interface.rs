@@ -83,6 +83,7 @@ mod test {
     }
 
     #[test]
+    #[ignore = "ci"]
     fn test_unix_user() {
         let user = |name| User::from_name(name).unwrap().unwrap();
         test_user(user(cstr!("root")), cstr!("root"), 0);
@@ -90,6 +91,7 @@ mod test {
     }
 
     #[test]
+    #[ignore = "ci"]
     fn test_unix_group() {
         let group = |name| Group::from_name(name).unwrap().unwrap();
         test_group(group(cstr!("root")), "root", 0);
