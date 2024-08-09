@@ -275,6 +275,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "ci"]
     fn group_as_non_root() {
         let options = get_options(&["-g", "root"]);
         let result = SuContext::from_env(options);

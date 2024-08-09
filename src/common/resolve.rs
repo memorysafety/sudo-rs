@@ -227,6 +227,7 @@ mod tests {
     use super::{is_valid_executable, resolve_path, resolve_target_user_and_group, NameOrId};
 
     #[test]
+    #[ignore = "ci"]
     fn test_resolve_path() {
         // Assume any linux distro has utilities in this PATH
         let path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";

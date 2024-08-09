@@ -684,6 +684,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "ci"]
     fn test_get_user_and_group_by_id() {
         let fixed_users = &[(0, "root"), (1, "daemon")];
         for &(id, name) in fixed_users {

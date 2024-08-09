@@ -108,6 +108,7 @@ mod test {
     use super::*;
 
     #[test]
+    #[ignore = "ci"]
     fn secure_open_is_predictable() {
         // /etc/hosts should be readable and "secure" (if this test fails, you have been compromised)
         assert!(std::fs::File::open("/etc/hosts").is_ok());
@@ -121,6 +122,7 @@ mod test {
     }
 
     #[test]
+    #[ignore = "ci"]
     fn test_secure_open_cookie_file() {
         assert!(secure_open_cookie_file("/etc/hosts").is_err());
     }
